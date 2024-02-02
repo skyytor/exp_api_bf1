@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
     "rootDir": "src",
     "outDir": "lib",
     "target": "es2022",

@@ -8,7 +8,7 @@ export { get_account, get_sessionId, get_token, get_personaId, post }
 const native_ea_api: string = 'https://sparta-gw.battlelog.com/jsonrpc/pc/api'
 
 
-let error_code_collection = {
+let error_code_collection :object= {
     "-32501": "session失效,请注意刷新session",
     "-32504": "连接超时",
     "-34501": "找不到服务器",
@@ -32,7 +32,7 @@ async function error_handle(error_code: string) {
     if (keys.indexOf(error_code) > -1)
         return {
             data: error_code,
-            error: error_code_collection[error_code]
+            error: error_code_collection[error_code] 
         }
     else return {
         data: null,
