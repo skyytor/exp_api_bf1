@@ -16,7 +16,9 @@ export interface Account {
 }
 
 export async function refresh() {
-
+    await refresh_sid();
+    await refresh_sessionId();
+    await refresh_token();
     cron.schedule("0 0 */12 * * *", () => {
         console.log(new Date().toLocaleString() + "每12小时刷新sessionId");
         refresh_sessionId();
