@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { Account } from '../refresh'
+import fs from "fs/promises";
 
 export { native_ea_api }
-
 
 export { get_account, get_sessionId, get_token, get_personaId, post }
 
@@ -52,6 +53,7 @@ async function get_account({ remid, sid }: any = {}) {
             validateStatus: () => true, // 返回所有响应
             maxRedirects: 0 // 禁止重定向
         })
+        console.log(result.headers)
         if (remid && !sid) {
             try {
                 let location = result.headers.location
@@ -69,11 +71,13 @@ async function get_account({ remid, sid }: any = {}) {
                 remid = matchremid[1]
                 let matchsid = newCookie[1].match(/sid=([^;]+)/)
                 sid = matchsid[1]
+                console.log(remid)
                 return {
                     remid: remid,
                     sid: sid,
                     authCode: authCode
                 }
+                
             } catch (error) {
                 console.log('根据remid获取session时出错')
             }
@@ -131,6 +135,7 @@ async function get_sessionId(authCode: string) {
         }
     } catch (error) {
         console.log('自动获取sessionId时出错')
+        console.log(error.response.data)
     }
 }
 
@@ -179,13 +184,16 @@ async function get_personaId(playername: string, token: string) {
 
 async function post(data: object) {
     try {
-        let sessionId:string = '3daa374f-e0b6-4b1b-b807-5bbf67270cf6'
+        let account: Account = JSON.parse(
+            await fs.readFile("./assets/accounts.json", "utf-8")
+        );
+
         let result = await axios({
             url: native_ea_api,
             method: 'post',
             headers: {
                 'Content-Type': 'text/json',
-                'X-Gatewaysession': sessionId
+                'X-Gatewaysession': account.sessionId
             },
             data: data,
             timeout: 60000,
@@ -196,7 +204,8 @@ async function post(data: object) {
         }
     } catch (error) {
         console.log('通用post请求出错')
-        console.log(error.response)
+        console.log(error.response.data)
+        
 
     }
 }
