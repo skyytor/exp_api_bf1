@@ -11,6 +11,9 @@ get_stat.post('/', async (req, res) => {
     let result = await stat(req.body.personaId)
     res.json(result)
 })
+
+
+
 // define the about route
 get_stat.get('/', (req, res) => {
     res.send('About birds')
