@@ -1,6 +1,4 @@
 /lib
 /node_modules
-/assets/capoo
-/assets/chai
-/assets/ding
-/assets/long
+/assets/*/
+
