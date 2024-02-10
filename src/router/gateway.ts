@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { Account } from '../refresh'
+import { Account, get_account } from '../refresh'
 import fs from "fs/promises";
+import path from 'path'
 
 export { native_ea_api }
 
-export { get_account, get_sessionId, get_token, get_personaId, post }
+export {  get_sessionId, get_token, get_personaId, post }
 
 const native_ea_api: string = 'https://sparta-gw.battlelog.com/jsonrpc/pc/api'
 
@@ -25,7 +26,6 @@ let error_code_collection :object= {
     "-32858": "服务器未开启",
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function error_handle(error_code: string) {
@@ -42,7 +42,7 @@ async function error_handle(error_code: string) {
 }
 
 //此处的ctx不能声明为context类型，原因未知
-async function get_account({ remid, sid }: any = {}) {
+async function get_cookies({ remid, sid }: any = {}) {
     try {
         if (!remid && !sid) throw new Error('未提供Cookie')
         const Cookie = `${remid ? `remid=${remid};` : ''}${sid ? `sid=${sid};` : ''}`
@@ -155,8 +155,8 @@ async function get_token({ remid, sid }: any = {}) {
 }
 
 //根据token来从name获取pid
-async function get_personaId(playername: string, token: string) {
-
+async function get_personaId(playername: string) {
+let {token} =await get_account()
     try {
         let result = await axios({
             url: 'https://gateway.ea.com/proxy/identity/personas?namespaceName=cem_ea_id&displayName=' + playername,
