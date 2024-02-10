@@ -12,7 +12,4 @@ get_playerinfo.post('/', async (req, res) => {
     let result = await playerinfo(req.body.personaIds)
     res.json(result)
 })
-// define the about route
-get_playerinfo.get('/', (req, res) => {
-    res.send('About birds')
-})
+

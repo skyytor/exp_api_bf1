@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node lib/index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "tsc && nodemon lib/index.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +25,7 @@
     "@types/node-cron": "^3.0.11",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
+    "node-dev": "^8.0.0",
     "ts-node": "^10.9.2"
   }
 }

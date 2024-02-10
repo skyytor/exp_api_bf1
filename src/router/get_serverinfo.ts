@@ -8,10 +8,8 @@ get_serverinfo.use(express.urlencoded({ extended: false }))
 
 // define the home page route
 get_serverinfo.post('/', async (req, res) => {
-    let result = await serverinfo(req.body.servername)
-    res.json(result)
-})
-// define the about route
-get_serverinfo.get('/', (req, res) => {
-    res.send('About birds')
+    let info: any = req.query
+    
+    let result = await serverinfo(info.servername)
+res.json(result)
 })

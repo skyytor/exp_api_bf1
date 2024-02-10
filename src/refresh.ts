@@ -4,7 +4,6 @@ import axios from "axios";
 import { get_sessionId, get_token } from "./router/gateway";
 export { refresh_sid, refresh_remid, refresh_sessionId, refresh_token };
 
-
 export interface Account {
     sid: string;
     remid: string;
@@ -17,7 +16,6 @@ export interface Account {
 
 export async function refresh() {
     console.log('执行获取remid')
-
     await refresh_remid()
     console.log('执行获取sid')
     await refresh_sid();
@@ -26,7 +24,7 @@ export async function refresh() {
     console.log('执行获取token')
     await refresh_token();
     console.log('获取完毕')
-    
+
     cron.schedule("0 0 */12 * * *", () => {
         console.log(new Date().toLocaleString() + "每12小时刷新sessionId");
         refresh_sessionId();
@@ -77,11 +75,16 @@ async function refresh_remid() {
 
 async function refresh_sessionId() {
     //返回sessionId和personaId
-    let account: Account = await get_account()
-    let info = await get_sessionId(account.authCode)
-    account.sessionId = info.sessionId;
-    account.personaId = info.personaId;
-    write_account(account)
+    try {
+        let account: Account = await get_account()
+        let info = await get_sessionId(account.authCode)
+        account.sessionId = info.sessionId;
+        account.personaId = info.personaId;
+        write_account(account)
+    } catch (error) {
+
+    }
+
 }
 
 async function refresh_token() {
@@ -94,13 +97,13 @@ async function refresh_token() {
 
 export let get_account = async () => {
     return JSON.parse(
-        await fs.readFile("./assets/accounts.json", "utf-8")
+        await fs.readFile("./assets/config/accounts.json", "utf-8")
     ) as Account
 }
 
 let write_account = async (account: Account) => {
     await fs.writeFile(
-        "./assets/accounts.json",
+        "./assets/config/accounts.json",
         JSON.stringify(account),
         "utf-8"
     );

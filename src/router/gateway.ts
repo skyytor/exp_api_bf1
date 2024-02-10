@@ -26,6 +26,100 @@ let error_code_collection :object= {
     "-32858": "服务器未开启",
 }
 
+class filterJson {
+    _filterJson: {
+        //所有值都是可选的, 要什么写什么就行, 在getGameData有详细的
+        name: string,
+        serverType: {
+            //服务器类型
+            OFFICIAL: string,//官服
+            RANKED: string, //私服
+            UNRANKED: string, //私服(不计战绩)
+            PRIVATE: string, //密码服
+        },
+        gameModes: {
+            //模式
+            ZoneControl: string,
+            AirAssault: string,
+            TugOfWar: string,
+            Domination: string,
+            Breakthrough: string,
+            Rush: string,
+            TeamDeathMatch: string,
+            BreakthroughLarge: string,
+            Possession: string,
+            Conquest: string,
+        },
+        slots: {
+            //空位
+            oneToFive: string, //1-5
+            sixToTen: string, //6-10
+            none: string, //无
+            tenPlus: string, //10+
+            all: string, //全部
+            spectator: string //观战
+        },
+        regions: {
+            //地区
+            OC: string, //大洋
+            Asia: string, //亚
+            EU: string, //欧
+            Afr: string, //非
+            AC: string, //南极洲(真有人吗)
+            SAm: string, //南美
+            NAm: string //北美
+        }
+    }
+
+    constructor() {
+        this._filterJson = {
+            name: '',
+            serverType: {
+                OFFICIAL: 'off',
+                RANKED: 'on',
+                UNRANKED: 'on',
+                PRIVATE: 'on'
+            },
+            gameModes: {
+                ZoneControl: 'on',
+                AirAssault: 'on',
+                TugOfWar: 'on',
+                Domination: 'on',
+                Breakthrough: 'on',
+                Rush: 'on',
+                TeamDeathMatch: 'on',
+                BreakthroughLarge: 'on',
+                Possession: 'on',
+                Conquest: 'on'
+            },
+            slots: {
+                oneToFive: 'on',
+                sixToTen: 'on',
+                none: 'on',
+                tenPlus: 'on',
+                all: 'on',
+                spectator: 'on'
+            },
+            regions: {
+                OC: 'on',
+                Asia: 'on',
+                EU: 'on',
+                Afr: 'on',
+                AC: 'on',
+                SAm: 'on',
+                NAm: 'on'
+            }
+        }
+    }
+
+    set set_official(official: string) {
+        this._filterJson.serverType.OFFICIAL = official
+    }
+    set set_name(name: string) {
+        this._filterJson.name = name
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function error_handle(error_code: string) {
@@ -185,7 +279,7 @@ let {token} =await get_account()
 async function post(data: object) {
     try {
         let account: Account = JSON.parse(
-            await fs.readFile("./assets/accounts.json", "utf-8")
+            await fs.readFile("./assets/config/accounts.json", "utf-8")
         );
 
         let result = await axios({
@@ -204,7 +298,7 @@ async function post(data: object) {
         }
     } catch (error) {
         console.log('通用post请求出错')
-        console.log(error.response.data)
+        console.log(error)
         
 
     }
@@ -236,19 +330,23 @@ export async function playerlist13(gameid: string) {
     }
 }
 
-export async function serverinfo(filter_json: object) {
-
+export async function serverinfo(servername: string) {
+    let filter_json = new filterJson()
+    filter_json.set_name = servername
+    console.log(filter_json._filterJson)
+    
     return await post({
         jsonrpc: '2.0',
         method: 'GameServer.searchServers',
         params: {
             game: 'tunguska',
-            filterJson: JSON.stringify(filter_json),
+            filterJson: JSON.stringify(filter_json._filterJson),
             limit: 200
         },
         id: null
     })
-
+    
+      
 }
 
 //服管部分
@@ -409,7 +507,8 @@ export async function getServerDetails(gameId: string) {
 }
 
 export async function playerinfo(personaIds: [number|string]) {
-    
+        console.log(personaIds)
+        
     return await post({
         jsonrpc: '2.0',
         method: 'RSP.getPersonasByIds',
