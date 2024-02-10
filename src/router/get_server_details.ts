@@ -1,6 +1,6 @@
 import express from 'express'
-import { getServerDetails, playerinfo } from './gateway'
-import { stat } from './gateway'
+import { getServerDetails } from './gateway'
+
 
 export const get_server_details = express.Router()
 get_server_details.use(express.json()) // 解析 JSON 格式的请求体
