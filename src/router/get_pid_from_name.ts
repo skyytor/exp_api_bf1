@@ -9,7 +9,7 @@ get_pid_from_name.use(express.urlencoded({ extended: false }))
 
 get_pid_from_name.post('/', async (req, res) => {
     let info: any = req.query
-    let result = await get_personaId(info.gameId)
+    let result = await get_personaId(info.playerName)
     res.json(result)
 })
 // define the about route

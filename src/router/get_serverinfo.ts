@@ -10,6 +10,6 @@ get_serverinfo.use(express.urlencoded({ extended: false }))
 get_serverinfo.post('/', async (req, res) => {
     let info: any = req.query
     
-    let result = await serverinfo(info.servername)
+    let result = await serverinfo(info.serverName)
 res.json(result)
 })
