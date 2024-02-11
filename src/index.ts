@@ -27,7 +27,7 @@ import { get_server_details } from './router/get_server_details';
   app.use(express.json()); // 解析 JSON 格式的请求体
   app.use(express.urlencoded({ extended: false }));
 
-  const swaggerDocument = JSON.parse(await fs.readFile(path.resolve(__dirname, '../assets/config/swagger_cofig.json'), 'utf8'));
+  const swaggerDocument = JSON.parse(await fs.readFile(path.resolve(__dirname, '../assets/config/swagger_config.json'), 'utf8'));
 
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
